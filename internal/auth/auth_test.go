@@ -33,14 +33,6 @@ func TestGetAPIKey(t *testing.T) {
 			wantErr: errors.New("malformed authorization header"),
 		},
 		{
-			name: "Found wrong ApiKey in header",
-			input: http.Header{
-				"Authorization": []string{"ApiKey fred"},
-			},
-			want:    "freds",
-			wantErr: nil,
-		},
-		{
 			name: "Found ApiKey in header",
 			input: http.Header{
 				"Authorization": []string{"ApiKey fred"},
