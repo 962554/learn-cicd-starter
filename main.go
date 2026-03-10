@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -20,6 +22,8 @@ import (
 type apiConfig struct {
 	DB *database.Queries
 }
+
+const readHeaderTimeout = 10 * time.Second
 
 //go:embed static/*
 var staticFiles embed.FS
@@ -91,8 +95,11 @@ func main() {
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: router,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
-	log.Printf("Serving on port: %s\n", port)
+	safePort := strings.ReplaceAll(port, "\n", "")
+	safePort = strings.ReplaceAll(safePort, "\r", "")
+	log.Printf("Serving on port: %q\n", safePort)
 	log.Fatal(srv.ListenAndServe())
 }
